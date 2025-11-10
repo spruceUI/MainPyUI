@@ -153,9 +153,6 @@ class Theme():
             if os.path.exists(tga_path):
                 return tga_path
 
-            # Theme is missing the image
-            return None
-
         # Otherwise return the original path
         return path
         
@@ -170,8 +167,6 @@ class Theme():
             tga_path = path[:-4] + ".tga" 
             if os.path.exists(tga_path):
                 return tga_path
-            # Theme is missing the image
-            return None
         
         # Otherwise return the original path
         return path
@@ -905,7 +900,7 @@ class Theme():
     @classmethod
     def get_game_select_img_width(cls):
         from devices.device import Device
-        return cls._data.get("gameSelectImgWidth", int(Device.screen_width() * 294 / 640))
+        return cls._data.get("gameSelectImgWidth", int(Device.screen_width() * 320 / 640))
     
     @classmethod
     def set_game_select_img_width(cls, value):
