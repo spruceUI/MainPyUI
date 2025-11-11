@@ -211,7 +211,7 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
         if(len(CfwSystemConfig.get_categories()) > 0):
             option_list.append(
                 GridOrListEntry(
-                            primary_text="CFW System Settings",
+                            primary_text=PyUiConfig.get_cfw_name() + " Settings",
                             value_text=None,
                             image_path=None,
                             image_path_selected=None,
