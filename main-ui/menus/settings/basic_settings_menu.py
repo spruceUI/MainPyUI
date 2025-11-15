@@ -6,7 +6,6 @@ from devices.device import Device
 from display.display import Display
 from menus.language.language import Language
 from menus.settings import settings_menu
-from menus.settings.cfw_system_settings_menu import CfwSystemSettingsMenu
 from menus.settings.extra_settings_menu import ExtraSettingsMenu
 from menus.settings.bluetooth_menu import BluetoothMenu
 from menus.settings.sound_settings import SoundSettings
@@ -105,11 +104,6 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
             self.theme_changed = True
             Display.restore_bg()
 
-
-    def launch_cfw_system_settings(self,input):
-        if(ControllerInput.A == input):
-            CfwSystemSettingsMenu().show_menu()
-
     def launch_extra_settings(self,input):
         if(ControllerInput.A == input):
             if(ExtraSettingsMenu().show_menu()):
@@ -166,104 +160,96 @@ class BasicSettingsMenu(settings_menu.SettingsMenu):
                         )
                 )
         
-        if(Device.supports_wifi()):
+
+        if(not Device.get_system_config().simple_mode_enabled()):
+
+            if(Device.supports_wifi()):
+                option_list.append(
+                        GridOrListEntry(
+                                primary_text="WiFi",
+                                value_text="<    " + (Device.get_ip_addr_text()) + "    >",
+                                image_path=None,
+                                image_path_selected=None,
+                                description=None,
+                                icon=None,
+                                value=self.show_wifi_menu
+                            )
+                    )
+            
+            if(Device.get_bluetooth_scanner() is not None):
+                option_list.append(
+                        GridOrListEntry(
+                                primary_text="Bluetooth",
+                                value_text="<    " + ("On" if Device.is_bluetooth_enabled() else "Off") + "    >",
+                                image_path=None,
+                                image_path_selected=None,
+                                description=None,
+                                icon=None,
+                                value=self.show_bt_menu
+                            )
+                    )
+                
             option_list.append(
-                    GridOrListEntry(
-                            primary_text="WiFi",
-                            value_text="<    " + (Device.get_ip_addr_text()) + "    >",
-                            image_path=None,
-                            image_path_selected=None,
-                            description=None,
-                            icon=None,
-                            value=self.show_wifi_menu
-                        )
-                )
-        
-        if(Device.get_bluetooth_scanner() is not None):
-            option_list.append(
-                    GridOrListEntry(
-                            primary_text="Bluetooth",
-                            value_text="<    " + ("On" if Device.is_bluetooth_enabled() else "Off") + "    >",
-                            image_path=None,
-                            image_path_selected=None,
-                            description=None,
-                            icon=None,
-                            value=self.show_bt_menu
-                        )
-                )
+                        GridOrListEntry(
+                                primary_text="Theme",
+                                value_text="<    " + Device.get_system_config().get_theme() + "    >",
+                                image_path=None,
+                                image_path_selected=None,
+                                description=None,
+                                icon=None,
+                                value=self.change_theme
+                            )
+            )
             
         option_list.append(
-                GridOrListEntry(
-                        primary_text="Theme",
-                        value_text="<    " + Device.get_system_config().get_theme() + "    >",
-                        image_path=None,
-                        image_path_selected=None,
-                        description=None,
-                        icon=None,
-                        value=self.change_theme
-                    )
-            )
-        
-        option_list.append(
-                GridOrListEntry(
-                        primary_text="Theme Settings",
-                        value_text=None,
-                        image_path=None,
-                        image_path_selected=None,
-                        description=None,
-                        icon=None,
-                        value=self.launch_theme_settings
-                    )
-            )
-
-        option_list.append(
-            GridOrListEntry(
-                primary_text="Sound Settings",
-                value_text="",
-                image_path=None,
-                image_path_selected=None,
-                description=None,
-                icon=None,
-                value=self.launch_sound_options
-            )
-        )
-
-        if(len(CfwSystemConfig.get_categories()) > 0):
-            option_list.append(
-                GridOrListEntry(
-                            primary_text=PyUiConfig.get_cfw_name() + " Settings",
+                    GridOrListEntry(
+                            primary_text="Theme Settings",
                             value_text=None,
                             image_path=None,
                             image_path_selected=None,
                             description=None,
                             icon=None,
-                            value=self.launch_cfw_system_settings
+                            value=self.launch_theme_settings
+                    )
+        )
+
+        if(not Device.get_system_config().simple_mode_enabled()):
+
+            option_list.append(
+                GridOrListEntry(
+                    primary_text="Sound Settings",
+                    value_text="",
+                    image_path=None,
+                    image_path_selected=None,
+                    description=None,
+                    icon=None,
+                    value=self.launch_sound_options
                 )
             )
 
-        option_list.append(
-                GridOrListEntry(
-                        primary_text="Extra Settings",
-                        value_text=None,
-                        image_path=None,
-                        image_path_selected=None,
-                        description=None,
-                        icon=None,
-                        value=self.launch_extra_settings
-                    )
-            )
+            option_list.append(
+                    GridOrListEntry(
+                            primary_text="Additional Settings",
+                            value_text=None,
+                            image_path=None,
+                            image_path_selected=None,
+                            description=None,
+                            icon=None,
+                            value=self.launch_extra_settings
+                        )
+                )
 
-        option_list.append(
-                GridOrListEntry(
-                        primary_text=Language.exit_py_ui(),
-                        value_text=None,
-                        image_path=None,
-                        image_path_selected=None,
-                        description=None,
-                        icon=None,
-                        value=self.exit
-                    )
-            )
+            option_list.append(
+                    GridOrListEntry(
+                            primary_text=Language.exit_py_ui(),
+                            value_text=None,
+                            image_path=None,
+                            image_path_selected=None,
+                            description=None,
+                            icon=None,
+                            value=self.exit
+                        )
+                )
         
 
         return option_list

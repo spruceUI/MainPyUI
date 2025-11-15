@@ -194,7 +194,7 @@ class SystemConfig:
         self.save_config()
 
     def game_switcher_game_count(self):
-        return self.config.get("gameSwitcherGameCount", 5)
+        return self.config.get("gameSwitcherGameCount", 8)
 
     def never_prompt_boxart_resize(self):
         return self.config.get("neverPromptBoxartResize", False)
@@ -311,4 +311,17 @@ class SystemConfig:
         self.config["useCustomGameSwitcherPath"] = value
         self.save_config()
 
+    def game_selection_only_mode_enabled(self):
+        return self.config.get("gameSelectionOnlyMode", False)
+
+    def set_game_selection_only_mode_enabled(self,value):
+        self.config["gameSelectionOnlyMode"] = value
+        self.save_config()
+
+    def simple_mode_enabled(self):
+        return self.config.get("simpleMode", False)
+
+    def set_simple_mode_enabled(self,value):
+        self.config["simpleMode"] = value
+        self.save_config()
 
