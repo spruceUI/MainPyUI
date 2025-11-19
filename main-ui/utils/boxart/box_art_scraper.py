@@ -42,8 +42,9 @@ class BoxArtScraper:
     def __init__(self):
         self.base_dir = "/mnt/SDCARD"
         self.roms_dir = Device.get_roms_dir()
-        script_dir = Path(__file__).resolve().parent
-        self.db_dir = os.path.join(script_dir,"db")
+        script_dir = Path(__file__).resolve().parent.parent.parent.parent
+        self.db_dir = os.path.join(script_dir,"boxartdb")
+        PyUiLogger.get_logger().info(f"BoxArtScraper: Using boxart db directory at {self.db_dir}")
         self.game_system_utils = Device.get_game_system_utils()
         self.preferred_region = Device.get_system_config().get_preferred_region()
         self._cache = {}  # sys_name -> list of (filename, token_set)
@@ -330,6 +331,9 @@ class BoxArtScraper:
         roms_and_paths: list[tuple[str, str]],
         max_workers: int = 8,
     ):
+        if(not self.check_wifi()):
+            return
+
         """
         Run download_boxart() concurrently for a batch of ROM/image pairs.
 
@@ -420,13 +424,10 @@ class BoxArtScraper:
                 tasks.append((sys_name, ra_name, root, file))
         return tasks
 
-    def scrape_boxart(self, max_workers=8):
-        self.log_and_display_message(
-            "Scraping box art. Please be patient, especially with large libraries!"
-        )
-
+    def check_wifi(self):
         if not Device.is_wifi_enabled():
             Display.display_message("Wifi must be connected", 2000)
+            return False
 
         if not self._ping("thumbnails.libretro.com"):
             self.log_and_display_message("Libretro thumbnail service unavailable; trying fallback.")
@@ -435,8 +436,17 @@ class BoxArtScraper:
                     "Libretro thumbnail GitHub repo is also currently unavailable. Please try again later."
                 )
                 time.sleep(3)
-                return
+                return False
+        return True
+            
+    def scrape_boxart(self, max_workers=8):
+        self.log_and_display_message(
+            "Scraping box art. Please be patient, especially with large libraries!"
+        )
 
+        if(not self.check_wifi()):
+            return
+        
         tasks = []
         # First, collect all ROM files for all systems
         for sys_dir in [d for d in os.listdir(self.roms_dir) if os.path.isdir(os.path.join(self.roms_dir, d))]:
