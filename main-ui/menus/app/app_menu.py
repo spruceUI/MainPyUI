@@ -51,6 +51,14 @@ class AppMenu:
         if(selected.get_selection() is not None):
             PyUiState.set_last_app_selection(selected.get_selection().get_extra_data().get_label())
 
+    def handle_app_selection(self, app):
+        launch = app.get_launch()
+        folder = app.get_folder()
+        Display.deinit_display()
+        Device.run_app(folder,launch)
+        Controller.clear_input_queue()
+        Display.reinitialize()
+        
     def append_pyui_apps(self, app_list):
         boxart_scraper_config = PyUiAppConfig("Boxart Scraper")
         
@@ -128,19 +136,17 @@ class AppMenu:
                     self.save_app_selection(selected)
                     if(not Theme.skip_main_menu()):
                         running = False
-                    elif(ControllerInput.MENU == selected.get_input()):
-                        self.save_app_selection(selected)
-                        if(selected.get_selection()):
-                            self.show_all_apps = AppMenuPopup(self.show_all_apps).run_app_menu_popup(selected.get_selection().get_extra_data())
-                        else:
-                            self.show_all_apps = AppMenuPopup(self.show_all_apps).run_app_menu_popup(None)
-                    elif(Theme.skip_main_menu() and ControllerInput.L1 == selected.get_input()):
-                        self.save_app_selection(selected)
-                        self.save_app_selection(selected)
-                        return ControllerInput.L1
-                    elif(Theme.skip_main_menu() and ControllerInput.R1 == selected.get_input()):
-                        self.save_app_selection(selected)
-                        self.save_app_selection(selected)
-                        return ControllerInput.R1
+                elif(ControllerInput.MENU == selected.get_input()):
+                    self.save_app_selection(selected)
+                    if(selected.get_selection()):
+                        self.show_all_apps = AppMenuPopup(self.show_all_apps).run_app_menu_popup(selected.get_selection().get_extra_data())
+                    else:
+                        self.show_all_apps = AppMenuPopup(self.show_all_apps).run_app_menu_popup(None)
+                elif(Theme.skip_main_menu() and ControllerInput.L1 == selected.get_input()):
+                    self.save_app_selection(selected)
+                    return ControllerInput.L1
+                elif(Theme.skip_main_menu() and ControllerInput.R1 == selected.get_input()):
+                    self.save_app_selection(selected)
+                    return ControllerInput.R1
                         
                     
