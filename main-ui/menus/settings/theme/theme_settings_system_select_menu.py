@@ -34,13 +34,14 @@ class ThemeSettingsSystemSelectMenu(ThemeSettingsMenuCommon):
                                 set_value_func=Theme.set_list_system_select_img_height
                             )
                         )                       
-
-        if(ViewType.GRID == Theme.get_view_type_for_system_select_menu()):
+        if(ViewType.CAROUSEL == Theme.get_view_type_for_system_select_menu() or ViewType.GRID == Theme.get_view_type_for_system_select_menu()):        
             option_list.append(
                 self.build_numeric_entry("Columns", 
                                         Theme.get_game_system_select_col_count, 
                                         Theme.set_game_system_select_col_count)
             )
+
+        if(ViewType.GRID == Theme.get_view_type_for_system_select_menu()):
             option_list.append(
                 self.build_numeric_entry("Rows", 
                                         Theme.get_game_system_select_row_count, 
@@ -77,7 +78,14 @@ class ThemeSettingsSystemSelectMenu(ThemeSettingsMenuCommon):
                                 get_value_func=Theme.get_grid_system_select_img_height,
                                 set_value_func=Theme.set_grid_system_select_img_height
                             )
-                        )                       
+                        )                  
+            if(Theme.get_game_system_select_row_count() == 1):
+                option_list.append(
+                    self.build_enabled_disabled_entry("Wrap-Around", 
+                                            Theme.get_system_select_grid_wrap_around_single_row, 
+                                            Theme.set_system_select_grid_wrap_around_single_row)
+                )
+
         if(ViewType.FULLSCREEN_GRID == Theme.get_view_type_for_system_select_menu()):
             option_list.append(
                 self.build_enabled_disabled_entry("Show Text", 
@@ -117,7 +125,18 @@ class ThemeSettingsSystemSelectMenu(ThemeSettingsMenuCommon):
                         Theme.get_carousel_system_select_sides_hang_off,
                         Theme.set_carousel_system_select_sides_hang_off)
                 )
-
+            option_list.append(
+                self.build_numeric_entry("Internal Padding", 
+                                        Theme.get_carousel_system_x_pad, 
+                                        Theme.set_carousel_system_x_pad,
+                                        min=0)
+            )
+            option_list.append(
+                self.build_numeric_entry("X-Offset", 
+                                        Theme.get_carousel_system_external_x_offset, 
+                                        Theme.set_carousel_system_external_x_offset,
+                                        min=-99999)
+            )
         if(ViewType.CAROUSEL == Theme.get_view_type_for_system_select_menu() or ViewType.CAROUSEL == Theme.get_view_type_for_system_select_menu()):        
             option_list.append(
                 self.build_enabled_disabled_entry(

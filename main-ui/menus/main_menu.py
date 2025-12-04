@@ -22,12 +22,13 @@ from views.view_creator import ViewCreator
 
 class MainMenu:
     def __init__(self):
-        self.system_select_menu = GameSystemSelectMenu()
         self.app_menu = AppMenu()
         self.favorites_menu = FavoritesMenu()
         self.collections_menu = CollectionsMenu()
         self.recents_menu = RecentsMenu()
         self.settings_menu = BasicSettingsMenu()
+        self.system_select_menu = GameSystemSelectMenu(self.app_menu, self.favorites_menu, self.collections_menu, self.recents_menu, self.settings_menu)
+
         self.popup_menu = MainMenuPopup()
 
     def reorder_options(self,ordering, objects):
@@ -122,7 +123,9 @@ class MainMenu:
             cols=Theme.get_main_menu_column_count(), 
             rows=1,
             selected_index=selected.get_index(),
-            show_grid_text=Theme.get_main_menu_show_text_grid_mode())
+            show_grid_text=Theme.get_main_menu_show_text_grid_mode(),
+            grid_view_wrap_around_single_row=Theme.get_main_menu_grid_wrap_around_single_row()
+        )
 
     def launch_selection(self, selection):
         if("Game" == selection):
@@ -184,7 +187,7 @@ class MainMenu:
         self.check_for_boxart_resizing()
     
 
-        if(Theme.skip_main_menu()):
+        if(Theme.skip_main_menu() or Theme.merge_main_menu_and_game_menu()):
 
             selection = PyUiState.get_last_main_menu_selection()
             if(selection not in ["Game","App","Setting"]):
