@@ -907,6 +907,24 @@ class Theme():
         cls.save_changes()
 
     @classmethod
+    def get_carousel_system_use_percentage_mode(cls):
+        return cls._data.get("carouselSystemUsePercentageMode", True)
+
+    @classmethod
+    def set_carousel_system_use_percentage_mode(cls, value):
+        cls._data["carouselSystemUsePercentageMode"] = value
+        cls.save_changes()
+
+    @classmethod
+    def get_carousel_system_fixed_width(cls):
+        return cls._data.get("carouselSystemFixedWidth", 100)
+
+    @classmethod
+    def set_carousel_system_fixed_width(cls, value):
+        cls._data["carouselSystemFixedWidth"] = value
+        cls.save_changes()
+
+    @classmethod
     def get_view_type_for_app_menu(cls):
         view_type_str = cls._data.get("appMenuViewType", "DESCRIPTIVE_LIST_VIEW")
         return getattr(ViewType, view_type_str, ViewType.ICON_AND_DESC)
@@ -1375,6 +1393,17 @@ class Theme():
     def set_display_battery_icon(cls, value):
         cls._data["displayBatteryIcon"] = value
         cls.save_changes()
+
+    @classmethod
+    def display_volume_numbers(cls):
+        return cls._data.get("displayVolumeNumbers", False)
+    
+    @classmethod
+    def set_display_volume_numbers(cls, value):
+        cls._data["displayVolumeNumbers"] = value
+        cls.save_changes()
+
+        
 
     @classmethod
     def get_main_menu_title(cls):
