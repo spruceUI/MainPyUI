@@ -915,6 +915,15 @@ class Theme():
         cls.save_changes()
         
     @classmethod
+    def get_carousel_use_selected_image_in_animation(cls):
+        return cls._data.get("carouselSystemUseSelectedImageInAnimation", True)
+
+    @classmethod
+    def set_carousel_use_selected_image_in_animation(cls, value):
+        cls._data["carouselSystemUseSelectedImageInAnimation"] = value
+        cls.save_changes()
+        
+    @classmethod
     def get_carousel_system_external_x_offset(cls):
         return cls._data.get("carouselSystemExternalXPad", 0)
 
@@ -1484,6 +1493,15 @@ class Theme():
     @classmethod
     def set_show_clock(cls, value):
         cls._data["showClock"] = value
+        cls.save_changes()
+
+    @classmethod
+    def grid_bg_offset_to_image_offset(cls):
+        return cls._data.get("gridBgOffsetToImageOffset", False)
+
+    @classmethod
+    def set_grid_bg_offset_to_image_offset(cls, value):
+        cls._data["gridBgOffsetToImageOffset"] = value
         cls.save_changes()
 
     @classmethod
