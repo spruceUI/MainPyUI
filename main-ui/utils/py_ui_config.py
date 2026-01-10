@@ -170,10 +170,6 @@ class PyUiConfig:
         cls.save()
 
     @classmethod
-    def animations_enabled(cls):
-        return cls.get("animationsEnabled",True)
-
-    @classmethod
     def get_language(cls):
         return cls.get("language","English")
 
@@ -198,3 +194,6 @@ class PyUiConfig:
     def cfw_tasks_json(cls):
         return cls.get("cfwTasks",None)
 
+    @classmethod
+    def get_wpa_supplicant_conf_file_location(cls, default_path):
+        return cls.get("wpaSupplicantConfigFileLocation",default_path)
